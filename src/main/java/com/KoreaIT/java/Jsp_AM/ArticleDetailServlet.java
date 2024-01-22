@@ -19,13 +19,16 @@ public class ArticleDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
-		String id = request.getParameter("id");
+		String inputedId = request.getParameter("id");
 		
-		if (id.equals(null)) {
-			id = "1";
+		if (inputedId == null) {
+			inputedId = "1";
 		}
 		
-		int realId = Integer.parseInt(id);
+		int realId = Integer.parseInt(inputedId);
+		
+		
+		
 		
 		
 		
