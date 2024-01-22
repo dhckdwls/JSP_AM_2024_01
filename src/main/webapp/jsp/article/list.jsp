@@ -20,30 +20,30 @@ List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getA
 		<li><%=articleRows.get(1).get("id")%>번, <%=articleRows.get(1).get("regDate")%>,<%=articleRows.get(1).get("title")%>,<%=articleRows.get(1).get("body")%></li>
 		<li><%=articleRows.get(2).get("id")%>번, <%=articleRows.get(2).get("regDate")%>,<%=articleRows.get(2).get("title")%>,<%=articleRows.get(2).get("body")%></li>
 	</ul>
-	
+
 	<h2>게시물 목록 v2</h2>
 	<ul>
-	<%
-	for (int i = 0; i < articleRows.size(); i++){
-	%>
-	<li><%=articleRows.get(i).get("id")%>번, <%=articleRows.get(i).get("regDate")%>,<%=articleRows.get(i).get("title")%>,<%=articleRows.get(i).get("body")%></li>	
-	<%
-	}
-	%>
+		<%
+		for (int i = 0; i < articleRows.size(); i++) {
+		%>
+		<li><%=articleRows.get(i).get("id")%>번, <%=articleRows.get(i).get("regDate")%>,<%=articleRows.get(i).get("title")%>,<%=articleRows.get(i).get("body")%></li>
+		<%
+		}
+		%>
 	</ul>
-	
+
 	<h2>게시물 목록 v3</h2>
 	<ul>
-	<%
-	for (int i = articleRows.size() - 1; i >= 0; i--){
-	%>
-	<li><%=articleRows.get(i).get("id")%>번, <%=articleRows.get(i).get("regDate")%>,<%=articleRows.get(i).get("title")%>,<%=articleRows.get(i).get("body")%></li>	
-	<%
-	}
-	%>
+		<%
+		for (int i = articleRows.size() - 1; i >= 0; i--) {
+		%>
+		<li><%=articleRows.get(i).get("id")%>번, <%=articleRows.get(i).get("regDate")%>,<%=articleRows.get(i).get("title")%>,<%=articleRows.get(i).get("body")%></li>
+		<%
+		}
+		%>
 	</ul>
-	
-	
-	
+
+
+
 </body>
 </html>
