@@ -13,25 +13,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/article/detatil")
+@WebServlet("/article/detail")
 public class ArticleDetailServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
-		String inputedId = request.getParameter("id");
-		
-		if (inputedId == null) {
-			inputedId = "1";
-		}
-		
-		int realId = Integer.parseInt(inputedId);
-		
-		
-		
-		
-		
-		
 		// DB연결
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -39,7 +26,7 @@ public class ArticleDetailServlet extends HttpServlet {
 			System.out.println("클래스가 없습니다.");
 			e.printStackTrace();
 		}
-		
+
 		String url = "jdbc:mysql://127.0.0.1:3306/JSP_AM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
 		String user = "root";
 		String password = "";
@@ -51,12 +38,14 @@ public class ArticleDetailServlet extends HttpServlet {
 			response.getWriter().append("연결 성공!");
 
 			DBUtil dbUtil = new DBUtil(request, response);
-			String sql = String.format("SELECT * FROM article WHERE id = %d",realId);
-			
+
+			int id = Integer.parseInt(request.getParameter("id"));
+
+//			String sql = "SELECT * FROM article WHERE id = " + id + ";";
+			String sql = String.format("SELECT * FROM article WHERE id = %d;", id);
 
 			Map<String, Object> articleRow = dbUtil.selectRow(conn, sql);
 
-//			response.getWriter().append(articleRows.toString());
 			request.setAttribute("articleRow", articleRow);
 			request.getRequestDispatcher("/jsp/article/detail.jsp").forward(request, response);
 
