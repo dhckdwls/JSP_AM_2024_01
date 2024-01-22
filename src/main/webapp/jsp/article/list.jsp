@@ -20,5 +20,16 @@ List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getA
 		<li><%=articleRows.get(1).get("id")%>번, <%=articleRows.get(1).get("regDate")%>,<%=articleRows.get(1).get("title")%>,<%=articleRows.get(1).get("body")%></li>
 		<li><%=articleRows.get(2).get("id")%>번, <%=articleRows.get(2).get("regDate")%>,<%=articleRows.get(2).get("title")%>,<%=articleRows.get(2).get("body")%></li>
 	</ul>
+	
+	<ul>
+	<%
+	for (int i = 0; i < articleRows.size(); i++){
+	%>
+	<li><%=articleRows.get(i).get("id")%>번, <%=articleRows.get(i).get("regDate")%>,<%=articleRows.get(i).get("title")%>,<%=articleRows.get(i).get("body")%></li>	
+	<%
+	}
+	%>
+	</ul>
+	
 </body>
 </html>
