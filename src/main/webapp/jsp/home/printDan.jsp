@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html;charset=UTF-8"
 	pageEncoding="EUC-KR"%>
 <%
 int dan = Integer.parseInt(request.getParameter("dan"));
@@ -12,7 +12,7 @@ String color = request.getParameter("color");
 <title>구구단 출력</title>
 </head>
 <body>
-
+	
 	<h3>
 		==<%=dan%>단==
 	</h3>
