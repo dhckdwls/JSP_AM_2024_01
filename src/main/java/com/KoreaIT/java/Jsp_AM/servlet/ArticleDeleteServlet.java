@@ -42,6 +42,11 @@ public class ArticleDeleteServlet extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("id"));
 
 //			String sql = String.format("DELETE * FROM article WHERE id = %d;", id);
+			
+//			String sql = String.format("SELECT * FROM article WHERE id = %d;", id);
+//
+//			Map<String, Object> articleRow = DBUtil.selectRow(conn, sql);
+			
 			SecSql sql = new SecSql();
 			
 			sql.append("DELETE FROM article");
