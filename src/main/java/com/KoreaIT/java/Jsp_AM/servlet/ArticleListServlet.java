@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,30 +35,35 @@ public class ArticleListServlet extends HttpServlet {
 		String password = "";
 
 		Connection conn = null;
-		
 
 		try {
 			conn = DriverManager.getConnection(url, user, password);
-			response.getWriter().append("연결 성공!");
-			// /article/list?page=1
-			String currentPage = request.getParameter("page");
-			if (currentPage == null || currentPage.equals(0)) {
-				currentPage = "1";
+
+			int page = 1;
+
+			if (request.getParameter("page") != null && request.getParameter("page").length() != 0) {
+				page = Integer.parseInt(request.getParameter("page"));
 			}
 
-			int itemsPerPage = 10;// 10개씩 끊어치기
-			int number = Integer.parseInt(currentPage);
-			int number2 = (number - 1) * itemsPerPage;
+			int itemsInAPage = 10;
+			int limitFrom = (page - 1) * itemsInAPage;
 
-			SecSql sql = SecSql.from("SELECT *");
+			SecSql sql = SecSql.from("SELECT COUNT(*) AS cnt");
+			sql.append("FROM article");
+
+			int totalCnt = DBUtil.selectRowIntValue(conn, sql);
+			int totalPage = (int) Math.ceil(totalCnt / (double) itemsInAPage);
+
+			sql = SecSql.from("SELECT *");
 			sql.append("FROM article");
 			sql.append("ORDER BY id DESC");
-			sql.append("limit ?, ?;", number2, itemsPerPage);
+			sql.append("LIMIT ?, ?;", limitFrom, itemsInAPage);
 
 			List<Map<String, Object>> articleRows = DBUtil.selectRows(conn, sql);
-
+			
+			request.setAttribute("page", page);
+			request.setAttribute("totalPage", totalPage);
 			request.setAttribute("articleRows", articleRows);
-			request.setAttribute("page", number);
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 
 		} catch (SQLException e) {
