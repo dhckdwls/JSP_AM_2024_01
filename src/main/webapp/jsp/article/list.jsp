@@ -68,6 +68,10 @@ int totalPage = (int) request.getAttribute("totalPage");
 }
 </style>
 
+	<a href="list?page=1">맨 앞으로</a>
+	<a href="list?page=<%=cPage - 10 <= 1 ? 1 : cPage - 10%>">10페이지 전</a>
+	<a href="list?page=<%=cPage - 1 <= 1 ? 1 : cPage - 1%>">이전페이지</a>
+
 	<div class="page">
 		<%
 		for (int i = 1; i <= totalPage; i++) {
@@ -77,6 +81,13 @@ int totalPage = (int) request.getAttribute("totalPage");
 		}
 		%>
 	</div>
+	<a href="list?page=<%=cPage + 1 <= totalPage ? cPage + 1 : totalPage%>">다음페이지</a>
+	<a href="list?page=<%=cPage + 10 <= totalPage ? cPage + 10 : totalPage%>">10페이지 후</a>
+
+
+
+
+
 
 
 
