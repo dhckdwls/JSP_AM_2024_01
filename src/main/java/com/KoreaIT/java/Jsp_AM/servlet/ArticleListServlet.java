@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,18 +36,30 @@ public class ArticleListServlet extends HttpServlet {
 		String password = "";
 
 		Connection conn = null;
+		
 
 		try {
 			conn = DriverManager.getConnection(url, user, password);
 			response.getWriter().append("연결 성공!");
+			// /article/list?page=1
+			String currentPage = request.getParameter("page");
+			if (currentPage == null || currentPage.equals(0)) {
+				currentPage = "1";
+			}
+
+			int itemsPerPage = 10;// 10개씩 끊어치기
+			int number = Integer.parseInt(currentPage);
+			int number2 = (number - 1) * itemsPerPage;
 
 			SecSql sql = SecSql.from("SELECT *");
 			sql.append("FROM article");
-			sql.append("ORDER BY id DESC;");
+			sql.append("ORDER BY id DESC");
+			sql.append("limit ?, ?;", number2, itemsPerPage);
 
 			List<Map<String, Object>> articleRows = DBUtil.selectRows(conn, sql);
 
 			request.setAttribute("articleRows", articleRows);
+			request.setAttribute("page", number);
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 
 		} catch (SQLException e) {

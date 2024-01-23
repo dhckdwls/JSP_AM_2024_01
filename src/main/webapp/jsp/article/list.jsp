@@ -5,6 +5,7 @@
 
 <%
 List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getAttribute("articleRows");
+int number = (int) request.getAttribute("page");
 %>
 <!DOCTYPE html>
 <html>
@@ -43,8 +44,11 @@ List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getA
 			%>
 		</tbody>
 	</table>
+	
 
-
+	<div><a href="list?page=<%=number - 1 %>">이전페이지로 이동</a></div>
+	<div><a href="list?page=<%=number + 1 %>">다음페이지로 이동</a></div>
+	
 
 
 
