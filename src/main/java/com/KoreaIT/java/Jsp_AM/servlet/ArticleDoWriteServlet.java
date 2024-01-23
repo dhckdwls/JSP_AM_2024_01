@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/article/doWrite")
-public class ArticleWriteServlet extends HttpServlet {
+public class ArticleDoWriteServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -36,34 +36,20 @@ public class ArticleWriteServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(url, user, password);
-			
-			if (request.getParameter("title") == null || request.getParameter("body") == null) {
-				request.getRequestDispatcher("/jsp/article/write.jsp").forward(request, response);
-				return;
-			}
-			
-			
-			String title  = request.getParameter("title");
+
+			String title = request.getParameter("title");
 			String body = request.getParameter("body");
-			
-			SecSql sql = new SecSql();
-			
-			sql = SecSql.from("SELECT COUNT(*) FROM article");
-			
-			int id = DBUtil.selectRowIntValue(conn, sql) + 1;
-			
-			sql = SecSql.from("INSERT INTO article");
+
+			SecSql sql = SecSql.from("INSERT INTO article");
 			sql.append("SET regDate = NOW(),");
 			sql.append("title = ?,", title);
 			sql.append("`body` = ?;", body);
 
-			DBUtil.update(conn, sql);
-			
-			response.getWriter()
-			.append(String.format("<script>alert('%d번 글이 생성되었습니다.'); location.replace('list');</script>", id));
+			int id = DBUtil.insert(conn, sql);
 
-			
-			
+			response.getWriter()
+					.append(String.format("<script>alert('%d번 글이 등록되었습니다.'); location.replace('list');</script>", id));
+
 		} catch (SQLException e) {
 			System.out.println("에러 : " + e);
 		} finally {
