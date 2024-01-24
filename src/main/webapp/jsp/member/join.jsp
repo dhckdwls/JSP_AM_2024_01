@@ -19,11 +19,14 @@
 			비밀번호 :
 			<input type="password" placeholder="비밀번호를 입력해주세요" name="loginPw">
 		</div>
+		<div>비밀번호 확인 :
+			<input type="password" placeholder="비밀번호 확인" name="loginPwConfirm" />	
+		</div>
 		<div>
 			이름 : 
 			<input type="text" placeholder="이름을 입력해주세요"  name="name">
 		</div>
-		<button type="submit">회원가입</button>
+		<button type="submit">회원가입</button><a href="../home/main">회원가입 취소</a>
 	</form>
 
 
