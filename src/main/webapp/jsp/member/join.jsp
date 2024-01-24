@@ -17,7 +17,7 @@
 		</div>
 		<div>
 			비밀번호 :
-			<input type="text" placeholder="비밀번호를 입력해주세요" name="loginPw">
+			<input type="password" placeholder="비밀번호를 입력해주세요" name="loginPw">
 		</div>
 		<div>
 			이름 : 

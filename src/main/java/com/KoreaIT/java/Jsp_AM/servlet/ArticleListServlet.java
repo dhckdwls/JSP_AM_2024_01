@@ -61,11 +61,12 @@ public class ArticleListServlet extends HttpServlet {
 
 			List<Map<String, Object>> articleRows = DBUtil.selectRows(conn, sql);
 
-			request.setAttribute("page", page);//url에 입력된 페이지
-			request.setAttribute("totalCnt",totalCnt );//페이지 번호의 총 갯수 나는 10개
-			request.setAttribute("totalPage", totalPage);//총 페이지 개수
-			request.setAttribute("itemsInAPage", itemsInAPage);//게시글을 몇개씩 보여줄건지
-			request.setAttribute("articleRows", articleRows);// 개수제한으로 가져온 게시물들의 리스트
+			request.setAttribute("page", page);
+			request.setAttribute("totalCnt", totalCnt);
+			request.setAttribute("totalPage", totalPage);
+			request.setAttribute("itemsInAPage", itemsInAPage);
+			request.setAttribute("articleRows", articleRows);
+
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 
 		} catch (SQLException e) {
