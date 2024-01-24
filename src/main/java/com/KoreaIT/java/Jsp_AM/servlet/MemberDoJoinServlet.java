@@ -37,16 +37,49 @@ public class MemberDoJoinServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(url, user, password);
-			response.getWriter().append("연결 성공!");
-			
-			
 			
 			String loginId = request.getParameter("loginId");
 			String name = request.getParameter("name");
 			String loginPw = request.getParameter("loginPw");
 			
+			String loginPwConfirm = request.getParameter("loginPwConfirm");
 			
-			SecSql sql = SecSql.from("INSERT INTO `member`");
+			if (!loginPw.equals(loginPwConfirm)) {
+//				response.getWriter().append("비밀번호가 일치하지 않습니다");
+				response.getWriter()
+				.append(String.format("<script>alert('비밀번호가 일치하지 않습니다'); location.replace('../member/join');</script>"));
+	
+			}
+			
+			if (loginId.length() == 0 || loginPw.length() == 0 || name.length() == 0) {
+//				response.getWriter().append("아이디 또는 비밀번호 또는 이름에 공백으로 입력할 수 없습니다");
+				response.getWriter()
+				.append(String.format("<script>alert('아이디 또는 비밀번호 또는 이름에 공백으로 입력할 수 없습니다'); location.replace('../member/join');</script>"));
+				
+			}
+			
+			
+			SecSql sql = new SecSql();
+			sql = SecSql.from("SELECT *");
+			sql.append("FROM `member`");
+			sql.append("WHERE loginID = ?;", loginId);
+			
+			Map<String, Object> selectRow = DBUtil.selectRow(conn, sql);
+			
+			if (selectRow.equals(null)) {
+//				response.getWriter().append("이미 있는 아이디 입니다");
+				response.getWriter()
+				.append(String.format("<script>alert('이미 있는 아이디 입니다'); location.replace('../member/join');</script>"));
+				
+				
+				
+			}
+			
+			
+			
+			
+			
+			sql = SecSql.from("INSERT INTO `member`");
 			sql.append("SET regDate = NOW(),");
 			sql.append("loginId = ?,", loginId);
 			sql.append("loginPw = ?,", loginPw);
