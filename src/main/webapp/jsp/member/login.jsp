@@ -10,8 +10,42 @@
 <body>
 	<h1>로그인 페이지</h1>
 	
+	<script type="text/javascript">
+		var LoginForm__submitDone = false;
+
+		function LoginForm__submit(form) {
+			if (LoginForm__submitDone) {
+				alert('이미 처리중입니다');
+				return;
+			}
+			// 			form.loginId.value = form.loginId.value.trim();
+			var loginId = form.loginId.value.trim();
+			var loginPw = form.loginPw.value.trim();
+			
+
+			console.log('form.loginId.value : ' + loginId);
+			console.log('form.loginPw.value : ' + loginPw);
+			
+
+			if (loginId.length == 0) {
+				alert('아이디를 입력해주세요');
+				form.loginId.focus();
+				return;
+			}
+			if (loginPw.length == 0) {
+				alert('비밀번호를 입력해주세요');
+				form.loginPw.focus();
+				return;
+			}
+
+			LoginForm__submitDone = true;
+			form.submit();
+
+		}
+	</script>
+	
 		<form method="POST" action="doLogin"
-		onsubmit="JoinForm__submit(this); return false;">
+		onsubmit="LoginForm__submit(this); return false;">
 		<div>
 			로그인 아이디 : <input autocomplete="off" type="text"
 				placeholder="아이디를 입력해주세요" name="loginId" />

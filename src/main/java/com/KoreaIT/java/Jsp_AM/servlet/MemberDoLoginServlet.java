@@ -27,6 +27,7 @@ public class MemberDoLoginServlet extends HttpServlet {
 		try {
 			Class.forName(Config.getDbDriverClassName());
 		} catch (ClassNotFoundException e) {
+			
 			System.out.println("클래스가 없습니다.");
 			e.printStackTrace();
 		}
