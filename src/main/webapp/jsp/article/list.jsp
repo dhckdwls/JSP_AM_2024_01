@@ -10,6 +10,7 @@ int cPage = (int) request.getAttribute("page");
 int totalPage = (int) request.getAttribute("totalPage");
 int totalCnt = (int) request.getAttribute("totalCnt");
 int itemsInAPage = (int) request.getAttribute("itemsInAPage");
+boolean isLogined = (boolean) request.getAttribute("isLogined");
 %>
 <!DOCTYPE html>
 <html>
@@ -65,7 +66,10 @@ body {
 		<a href="../home/main">메인으로 이동</a>
 	</div>
 	<div>
-		<a href="write">글쓰기</a>
+<%-- 	<% if (isLogined != false){%> --%>
+	<a href="write">글쓰기</a>
+<%-- 	<% }%> --%>
+	
 	</div>
 
 	<h2>게시물 목록</h2>
@@ -77,8 +81,10 @@ body {
 				<th>번호</th>
 				<th>작성날짜</th>
 				<th>제목</th>
+<%-- 				<% if (isLogined != false){%> --%>
 				<th>수정</th>
 				<th>삭제</th>
+<%-- 				<% }%> --%>
 			</tr>
 		</thead>
 		<tbody>
@@ -89,8 +95,10 @@ body {
 				<td><%=articleRow.get("id")%></td>
 				<td><%=articleRow.get("regDate")%></td>
 				<td><a href="detail?id=<%=articleRow.get("id")%>"><%=articleRow.get("title")%></a></td>
+<%-- 				<% if (isLogined != false){%> --%>
 				<td><a href="modify?id=<%=articleRow.get("id")%>">수정</a></td>
 				<td><a href="doDelete?id=<%=articleRow.get("id")%>">del</a></td>
+<%-- 				<% }%> --%>
 			</tr>
 			<%
 			}

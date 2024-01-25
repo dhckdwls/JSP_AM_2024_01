@@ -15,14 +15,13 @@ Map<String, Object> articleRow = (Map<String, Object>) request.getAttribute("art
 
 	<h2>게시물 수정</h2>
 
-	<h3><%=articleRow.get("id")%>번 게시물 수정
-	</h3>
+	<h3><%=articleRow.get("id")%>번 게시물 수정</h3>
 
 	<form method="POST" action="doModify">
 		<input type="hidden" value="<%=articleRow.get("id")%>" name="id" />
 		<div>
 			제목 : <input type="text" name="title"
-				value="<%=articleRow.get("title")%>"/ >
+				value="<%=articleRow.get("title")%>" />
 		</div>
 		<div>
 			내용 :

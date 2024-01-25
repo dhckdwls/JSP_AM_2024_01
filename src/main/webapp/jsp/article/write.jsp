@@ -19,6 +19,7 @@
 			내용 :
 			<textarea type="text" placeholder="내용을 입력해주세요" name="body"></textarea>
 		</div>
+		<input type="hidden" name="writer"  value=<% %>/>
 		<button type="submit">작성</button>
 	</form>
 

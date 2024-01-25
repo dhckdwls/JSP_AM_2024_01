@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/modify")
 public class ArticleModifyServlet extends HttpServlet {
@@ -35,7 +36,21 @@ public class ArticleModifyServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
-
+			
+			HttpSession session = request.getSession();
+			boolean isLogined = false;
+		
+			if (session.getAttribute("loginedMemberId") != null) {
+				isLogined = true;
+			}
+			if (isLogined == false) {
+				response.getWriter()
+				.append(String.format("<script>alert('로그인후 이용해주세요'); location.replace('list');</script>"));
+				return;
+			}
+			
+			
+			
 			int id = Integer.parseInt(request.getParameter("id"));
 
 			SecSql sql = SecSql.from("SELECT *");

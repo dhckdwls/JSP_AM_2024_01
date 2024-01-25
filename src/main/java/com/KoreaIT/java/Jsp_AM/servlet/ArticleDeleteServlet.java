@@ -15,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/doDelete")
 public class ArticleDeleteServlet extends HttpServlet {
@@ -34,13 +35,26 @@ public class ArticleDeleteServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
-			response.getWriter().append("연결 성공!");
-
+			//수정중
+			
+			HttpSession session = request.getSession();
+			boolean isLogined = false;
+			
+			if (session.getAttribute("loginedMemberId") != null) {
+				isLogined = true;
+			}
+			
+			if (isLogined == false) {
+				response.getWriter()
+				.append(String.format("<script>alert('로그인후 이용해주세요'); location.replace('list');</script>"));
+				return;
+			}
+			
 			int id = Integer.parseInt(request.getParameter("id"));
 
 			SecSql sql = SecSql.from("DELETE");
 			sql.append("FROM article");
-			sql.append("WHERE i = ?;", id);
+			sql.append("WHERE id = ?;", id);
 
 			DBUtil.delete(conn, sql);
 
