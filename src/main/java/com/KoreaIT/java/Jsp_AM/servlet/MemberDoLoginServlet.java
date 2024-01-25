@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/member/doLogin")
 public class MemberDoLoginServlet extends HttpServlet {
@@ -27,7 +28,6 @@ public class MemberDoLoginServlet extends HttpServlet {
 		try {
 			Class.forName(Config.getDbDriverClassName());
 		} catch (ClassNotFoundException e) {
-			
 			System.out.println("클래스가 없습니다.");
 			e.printStackTrace();
 		}
@@ -36,42 +36,40 @@ public class MemberDoLoginServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
-			
 
 			String loginId = request.getParameter("loginId");
 			String loginPw = request.getParameter("loginPw");
 
-			SecSql sql = SecSql.from("SELECT COUNT(*) AS cnt");
+			SecSql sql = SecSql.from("SELECT *");
 			sql.append("FROM `member`");
 			sql.append("WHERE loginId = ?;", loginId);
 
+			Map<String, Object> memberRow = DBUtil.selectRow(conn, sql);
 
-			
-			boolean isLoginableId = DBUtil.selectRowIntValue(conn, sql) == 1;
-			//1을 가져오면 있다는 뜻 1과 1은 같으니까 true 그런 아이디가 존재하면 트루
-			
-		
-			if (isLoginableId != true) {
+			if (memberRow.isEmpty()) {
 				response.getWriter().append(String.format(
-						"<script>alert('로그인 할수 없는 아이디 입니다'); location.replace('../member/login');</script>", loginId));
+						"<script>alert('%s는 없는 아이디입니다'); location.replace('../member/login');</script>", loginId));
 				return;
 			}
-			
 
-			sql = SecSql.from("SELECT loginPw");
-			sql.append("FROM `member`");
-			sql.append("WHERE loginId = ?;", loginId);
-			
-			Map<String ,Object> selectRow = DBUtil.selectRow(conn, sql);
-			
-			if (!selectRow.get("loginPw").equals(loginPw)) {
-				response.getWriter().append(String.format(
-						"<script>alert('비밀번호가 일치하지 않습니다'); location.replace('../member/login');</script>", loginId));
+			System.out.println(memberRow.get("loginPw"));
+			System.out.println(loginPw);
+
+			if (memberRow.get("loginPw").equals(loginPw) == false) {
+				response.getWriter().append(
+						String.format("<script>alert('비밀번호가 틀렸어'); location.replace('../member/login');</script>"));
 				return;
 			}
-			
-			response.getWriter().append(String.format(
-					"<script>alert('로그인이 완료되었습니다.'); location.replace('../article/list');</script>"));
+
+			HttpSession session = request.getSession();
+			session.setAttribute("loginedMemberId", memberRow.get("id"));
+			session.setAttribute("loginedMemberLoginId", memberRow.get("loginId"));
+			session.setAttribute("loginedMember", memberRow);
+
+			response.getWriter()
+					.append(String.format(
+							"<script>alert('%s님, 로그인 되었습니다.'); location.replace('../article/list');</script>",
+							memberRow.get("name")));
 
 		} catch (SQLException e) {
 			System.out.println("에러 : " + e);
