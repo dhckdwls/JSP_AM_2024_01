@@ -36,7 +36,15 @@ public class MemberDoLoginServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
-
+			
+			HttpSession session = request.getSession();
+			
+			if(session.getAttribute("loginedMember") != null) {
+				response.getWriter().append(String.format(
+						"<script>alert('이미 로그인상태입니다'); location.replace('../home/main');</script>"));
+				return;
+			}
+			
 			String loginId = request.getParameter("loginId");
 			String loginPw = request.getParameter("loginPw");
 
@@ -58,7 +66,7 @@ public class MemberDoLoginServlet extends HttpServlet {
 				return;
 			}
 
-			HttpSession session = request.getSession();
+			
 			session.setAttribute("loginedMemberId", memberRow.get("id"));
 			session.setAttribute("loginedMemberLoginId", memberRow.get("loginId"));
 			session.setAttribute("loginedMember", memberRow);
