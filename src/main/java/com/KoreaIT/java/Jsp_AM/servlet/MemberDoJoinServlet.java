@@ -44,11 +44,6 @@ public class MemberDoJoinServlet extends HttpServlet {
 			sql.append("WHERE loginId = ?;", loginId);
 
 			boolean isJoinableLoginId = DBUtil.selectRowIntValue(conn, sql) == 0;
-			//DB에 있는 회원들의 로그인 아이디와 login.jsp에서 form 데이터로 받아온 loginId를 비교
-			//일치하는게 있다면 중복된 아이디로 회원가입을 원하는 상황
-			//boolean 값이 true라면 회원가입을 할수 있도록
-			// false 라면 회원가입을 할수 없도록
-			//DB에서는 1이 true 0이 false 
 
 			if (isJoinableLoginId == false) {
 				response.getWriter().append(String.format(

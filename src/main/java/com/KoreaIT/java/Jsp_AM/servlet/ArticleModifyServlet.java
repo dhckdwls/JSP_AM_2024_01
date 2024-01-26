@@ -23,7 +23,17 @@ public class ArticleModifyServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		response.setContentType("text/html;charset=UTF-8");
+
+		HttpSession session = request.getSession();
+
+		if (session.getAttribute("loginedMemberId") == null) {
+			response.getWriter().append(
+					String.format("<script>alert('로그인 후 이용해주세요'); location.replace('../member/login');</script>"));
+			return;
+		}
+
 		// DB연결
 		try {
 			Class.forName(Config.getDbDriverClassName());
@@ -36,21 +46,7 @@ public class ArticleModifyServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
-			
-			HttpSession session = request.getSession();
-			boolean isLogined = false;
-		
-			if (session.getAttribute("loginedMemberId") != null) {
-				isLogined = true;
-			}
-			if (isLogined == false) {
-				response.getWriter()
-				.append(String.format("<script>alert('로그인후 이용해주세요'); location.replace('list');</script>"));
-				return;
-			}
-			
-			
-			
+
 			int id = Integer.parseInt(request.getParameter("id"));
 
 			SecSql sql = SecSql.from("SELECT *");
@@ -58,6 +54,15 @@ public class ArticleModifyServlet extends HttpServlet {
 			sql.append("WHERE id = ?;", id);
 
 			Map<String, Object> articleRow = DBUtil.selectRow(conn, sql);
+
+			//
+			int loginedMemberId = (int) session.getAttribute("loginedMemberId");
+
+			if ((int) articleRow.get("memberId") != loginedMemberId) {
+				response.getWriter()
+						.append(String.format("<script>alert('수정권한이 없어'); location.replace('list');</script>"));
+				return;
+			}
 
 			request.setAttribute("articleRow", articleRow);
 			request.getRequestDispatcher("/jsp/article/modify.jsp").forward(request, response);

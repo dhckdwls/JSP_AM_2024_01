@@ -37,14 +37,7 @@ public class ArticleListServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
-			
-			HttpSession session = request.getSession();
-			boolean isLogined = false;
-			
-			if (session.getAttribute("loginedMemberId") != null) {
-				isLogined = true;
-			}
-			
+
 			int page = 1;
 
 			if (request.getParameter("page") != null && request.getParameter("page").length() != 0) {
@@ -60,8 +53,10 @@ public class ArticleListServlet extends HttpServlet {
 			int totalCnt = DBUtil.selectRowIntValue(conn, sql);
 			int totalPage = (int) Math.ceil(totalCnt / (double) itemsInAPage);
 
-			sql = SecSql.from("SELECT *");
-			sql.append("FROM article");
+			sql = SecSql.from("SELECT A.*, M.name AS writer");
+			sql.append("FROM article AS A");
+			sql.append("INNER JOIN `member` AS M");
+			sql.append("ON A.memberId = M.id");
 			sql.append("ORDER BY id DESC");
 			sql.append("LIMIT ?, ?;", limitFrom, itemsInAPage);
 
@@ -72,8 +67,22 @@ public class ArticleListServlet extends HttpServlet {
 			request.setAttribute("totalPage", totalPage);
 			request.setAttribute("itemsInAPage", itemsInAPage);
 			request.setAttribute("articleRows", articleRows);
-			//
+
+			boolean isLogined = false;
+			int loginedMemberId = -1;
+			Map<String, Object> loginedMember = null;
+
+			HttpSession session = request.getSession();
+
+			if (session.getAttribute("loginedMemberId") != null) {
+				isLogined = true;
+				loginedMemberId = (int) session.getAttribute("loginedMemberId");
+				loginedMember = (Map<String, Object>) session.getAttribute("loginedMember");
+			}
+
 			request.setAttribute("isLogined", isLogined);
+			request.setAttribute("loginedMemberId", loginedMemberId);
+			request.setAttribute("loginedMember", loginedMember);
 
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 

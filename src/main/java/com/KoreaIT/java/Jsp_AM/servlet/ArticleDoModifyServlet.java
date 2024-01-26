@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.KoreaIT.java.Jsp_AM.config.Config;
 import com.KoreaIT.java.Jsp_AM.exception.SQLErrorException;
@@ -15,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/doModify")
 public class ArticleDoModifyServlet extends HttpServlet {
@@ -23,6 +25,15 @@ public class ArticleDoModifyServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		// DB연결
+
+		HttpSession session = request.getSession();
+
+		if (session.getAttribute("loginedMemberId") == null) {
+			response.getWriter().append(
+					String.format("<script>alert('로그인 후 이용해주세요'); location.replace('../member/login');</script>"));
+			return;
+		}
+
 		try {
 			Class.forName(Config.getDbDriverClassName());
 		} catch (ClassNotFoundException e) {
@@ -36,11 +47,11 @@ public class ArticleDoModifyServlet extends HttpServlet {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
 
 			int id = Integer.parseInt(request.getParameter("id"));
-
 			String title = request.getParameter("title");
 			String body = request.getParameter("body");
 
-			SecSql sql = SecSql.from("UPDATE article");
+			SecSql sql = new SecSql();
+			sql = SecSql.from("UPDATE article");
 			sql.append("SET ");
 			sql.append("title = ?,", title);
 			sql.append("`body` = ?", body);

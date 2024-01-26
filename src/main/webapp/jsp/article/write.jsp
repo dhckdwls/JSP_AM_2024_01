@@ -1,6 +1,8 @@
 <%@ page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +21,6 @@
 			내용 :
 			<textarea type="text" placeholder="내용을 입력해주세요" name="body"></textarea>
 		</div>
-		<input type="hidden" name="writer"  value=<% %>/>
 		<button type="submit">작성</button>
 	</form>
 

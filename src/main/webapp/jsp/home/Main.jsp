@@ -17,7 +17,6 @@ Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("
 	<div><%=loginedMemberId%>번, 회원 로그인 중
 	</div>
 	<div><%=loginedMember%></div>
-	<div><%=isLogined %></div>
 	<h1>MAIN</h1>
 	<%
 	if (isLogined) {

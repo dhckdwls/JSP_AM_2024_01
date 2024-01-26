@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.KoreaIT.java.Jsp_AM.util.DBUtil;
 import com.KoreaIT.java.Jsp_AM.util.SecSql;
@@ -21,19 +22,16 @@ public class ArticleWriteServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
+
 		HttpSession session = request.getSession();
-		boolean isLogined = false;
-	
-		if (session.getAttribute("loginedMemberId") != null) {
-			isLogined = true;
-			request.getRequestDispatcher("/jsp/article/write.jsp").forward(request, response);
-		}
-		if (isLogined == false) {
-			response.getWriter()
-			.append(String.format("<script>alert('로그인후 이용해주세요'); location.replace('list');</script>"));
+
+		if (session.getAttribute("loginedMemberId") == null) {
+			response.getWriter().append(
+					String.format("<script>alert('로그인 후 이용해주세요'); location.replace('../member/login');</script>"));
 			return;
 		}
-		
+
+		request.getRequestDispatcher("/jsp/article/write.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
