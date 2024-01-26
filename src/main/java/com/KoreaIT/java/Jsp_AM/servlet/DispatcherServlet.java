@@ -61,7 +61,8 @@ public class DispatcherServlet extends HttpServlet {
 
 			String[] requestUriBits = requestUri.split("/");
 			// ~~/s/article/list
-			// [0][1] [2] [3]
+			//local~/jsp24_01/ s /article/list
+			// [0] /[1]     /[2]/  [3] /[4]
 
 			if (requestUriBits.length < 5) {
 				response.getWriter().append("올바른 요청이 아닙니다.");
