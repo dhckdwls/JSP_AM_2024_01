@@ -25,15 +25,6 @@ public class ArticleDoModifyServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		// DB연결
-
-		HttpSession session = request.getSession();
-
-		if (session.getAttribute("loginedMemberId") == null) {
-			response.getWriter().append(
-					String.format("<script>alert('로그인 후 이용해주세요'); location.replace('../member/login');</script>"));
-			return;
-		}
-
 		try {
 			Class.forName(Config.getDbDriverClassName());
 		} catch (ClassNotFoundException e) {
@@ -47,10 +38,26 @@ public class ArticleDoModifyServlet extends HttpServlet {
 			conn = DriverManager.getConnection(Config.getDbUrl(), Config.getDbUser(), Config.getDbPw());
 
 			int id = Integer.parseInt(request.getParameter("id"));
+
 			String title = request.getParameter("title");
 			String body = request.getParameter("body");
 
-			SecSql sql = new SecSql();
+			HttpSession session = request.getSession();
+
+			int loginedMemberId = (int) session.getAttribute("loginedMemberId");
+
+			SecSql sql = SecSql.from("SELECT *");
+			sql.append("FROM article");
+			sql.append("WHERE id = ?;", id);
+
+			Map<String, Object> articleRow = DBUtil.selectRow(conn, sql);
+
+			if (loginedMemberId != (int) articleRow.get("memberId")) {
+				response.getWriter().append(
+						String.format("<script>alert('해당 글에 대한 권한이 없습니다.'); location.replace('list');</script>"));
+				return;
+			}
+
 			sql = SecSql.from("UPDATE article");
 			sql.append("SET ");
 			sql.append("title = ?,", title);
